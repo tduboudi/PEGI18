@@ -13,6 +13,7 @@ current = {'sequences': []}
 
 for line in file:
     if re.match(r'^\[INFO\]', line):   # Beginning match [INFO]
+        current['end'] = re.search(r'^\[INFO\](.*) -', line).group(1)
         data.append(current)
         current = {'sequences': []}
         continue
