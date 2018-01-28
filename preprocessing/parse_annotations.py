@@ -2,9 +2,14 @@
 
 import re
 import json
+import sys
 
-filename = 'annotations.txt'
-output   = 'currated.json'
+
+# filename = 'annotations.txt'
+# output   = 'currated.json'
+
+filename = sys.argv[1]
+output = sys.argv[2]
 
 file = open(filename, "r")
 data = []

@@ -1,11 +1,16 @@
 #!/usr/bin/python3.6
 
+
+import sys
 import re
 import json
 import datetime
 
-filename = 'currated.json'
-output   = 'expanded.json'
+# filename = 'currated.json'
+# output   = 'expanded.json'
+
+filename = sys.argv[1]
+output = sys.argv[2]
 
 def convertTime(hour):
     return 3600*hour.hour + 60*hour.minute + hour.second

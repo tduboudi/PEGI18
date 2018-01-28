@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+### not useful for now ###
+### extractFrames.py does the work ###
+
+
 import numpy as np
 import cv2
 import math
