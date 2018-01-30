@@ -4,6 +4,7 @@ from os import listdir
 from os.path import isfile, join
 from os import walk
 from os import mkdir
+import numpy as np
 import json
 import sys
 import cv2
@@ -49,13 +50,21 @@ class ImageLoader:
             # labels
             currentInput["labels"] = e["annotations"]
 
+            # number of frames & labels # not the same aaaarg
+            imagesNumber = len(currentInput["frames"])
+            labelsNumber = len(e["annotations"])
+            currentLength = min(imagesNumber, labelsNumber)
+            currentInput["labels"] = currentInput["labels"][:currentLength]
+            currentInput["frames"] = currentInput["frames"][:currentLength]
+
             # range of frames
-            currentLength = len(e["annotations"])
             currentInput["framesRange"] = (self.lastRange, self.lastRange + currentLength)
             self.lastRange = self.lastRange + currentLength
 
             self.inputsList.append(currentInput)
             self.framesNumber += currentLength
+
+        self.createEpochOrder()
 
     def getFramesNumber(self):
         return self.framesNumber
@@ -66,7 +75,7 @@ class ImageLoader:
         img = cv2.imread(imagePath)
         img = cv2.resize(img, (self.newSize[0], self.newSize[1]), interpolation=cv2.INTER_CUBIC)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img = cv2.flatten()
+        img = img.flatten()
         img = np.expand_dims(img, axis=0)
         img = img.astype(np.float32)
         return img
@@ -95,18 +104,25 @@ class ImageLoader:
                 count += 1
 
     def createEpochOrder(self):
-        order = np.arrange(self.framesNumber)
-        order = np.random.shuffle(order)
+        order = np.arange(self.framesNumber)
+        np.random.shuffle(order)
         self.currentEpochOrder = order
-
 
     def next(self):
         if self.Cursor < self.framesNumber:
-            imagePath = self.getImagePath(self.currentEpochOrder[self.Cursor])
-            labelPath = self.getLabelPath(self.currentEpochOrder[self.Cursor])
-            imageNumpy = self.load_image(imagePath)
-            self.Cursor += 1
-            return (imageNumpy, labelPath)
+            imageBatch = []
+            labelBatch = []
+            startingCursor = self.Cursor
+            for i in range (min(self.batchSize, self.framesNumber - startingCursor)):
+                imagePath = self.getImagePath(self.currentEpochOrder[self.Cursor])
+                label = self.getLabel(self.currentEpochOrder[self.Cursor])
+                imageNumpy = self.load_image(imagePath)
+                imageBatch.append(imageNumpy)
+                labelBatch.append(label)
+                self.Cursor += 1
+            imageBatch = np.array(imageBatch)
+            labelBatch = np.array(labelBatch, dtype=np.float32)
+            return (imageBatch, labelBatch)
         else:
             print("Starting new epoch")
             self.createEpochOrder()
@@ -114,6 +130,8 @@ class ImageLoader:
 
 
 test = ImageLoader("../../PEGI18_DATA/FRAMES/Training/", "./training_expanded.json", (640,480), 32)
-# print(test.printWhatsInside())
+print(test.printWhatsInside())
 for i in range (5000):
+    print("-------------------")
+    print(i)
     print(test.next())
