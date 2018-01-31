@@ -129,9 +129,11 @@ class ImageLoader:
             self.Cursor = 0
 
 
+
+
 test = ImageLoader("../../PEGI18_DATA/FRAMES/Training/", "./training_expanded.json", (640,480), 32)
 print(test.printWhatsInside())
-for i in range (5000):
+for i in range (1000):
     print("-------------------")
-    print(i)
-    print(test.next())
+    print("Batch number ",i)
+    test.next()
