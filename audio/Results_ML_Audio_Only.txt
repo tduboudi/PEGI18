@@ -1,0 +1,87 @@
+Classifier : RF
+    Accuracy is: 0.973
+    Recall is: 0.999, 0.000
+    Precision is: 0.974, 0.000
+    ROC AUC is: 0.500
+    Confusion matrix is:
+[[27920    15]
+ [  747     0]]
+    tn:27920, fp:15, fn:747, tp:0
+    Time: 2.746s
+
+Classifier : KNN
+    Accuracy is: 0.919
+    Recall is: 0.941, 0.074
+    Precision is: 0.974, 0.032
+    ROC AUC is: 0.507
+    Confusion matrix is:
+[[26295  1640]
+ [  692    55]]
+    tn:26295, fp:1640, fn:692, tp:55
+    Time: 6.210s
+
+Classifier : GNB
+    Accuracy is: 0.969
+    Recall is: 0.995, 0.000
+    Precision is: 0.974, 0.000
+    ROC AUC is: 0.497
+    Confusion matrix is:
+[[27785   150]
+ [  747     0]]
+    tn:27785, fp:150, fn:747, tp:0
+    Time: 0.076s
+
+Classifier : AB
+    Accuracy is: 0.972
+    Recall is: 0.998, 0.003
+    Precision is: 0.974, 0.040
+    ROC AUC is: 0.500
+    Confusion matrix is:
+[[27887    48]
+ [  745     2]]
+    tn:27887, fp:48, fn:745, tp:2
+    Time: 1.649s
+
+Classifier : BAG
+    Accuracy is: 0.964
+    Recall is: 0.989, 0.041
+    Precision is: 0.975, 0.091
+    ROC AUC is: 0.515
+    Confusion matrix is:
+[[27626   309]
+ [  716    31]]
+    tn:27626, fp:309, fn:716, tp:31
+    Time: 8.500s
+
+Classifier : MLP
+    Accuracy is: 0.965
+    Recall is: 0.990, 0.029
+    Precision is: 0.974, 0.070
+    ROC AUC is: 0.509
+    Confusion matrix is:
+[[27643   292]
+ [  725    22]]
+    tn:27643, fp:292, fn:725, tp:22
+    Time: 9.770s
+
+Classifier : CART
+    Accuracy is: 0.907
+    Recall is: 0.928, 0.116
+    Precision is: 0.975, 0.041
+    ROC AUC is: 0.522
+    Confusion matrix is:
+[[25922  2013]
+ [  660    87]]
+    tn:25922, fp:2013, fn:660, tp:87
+    Time: 0.262s
+
+Classifier : ID3
+    Accuracy is: 0.933
+    Recall is: 0.956, 0.083
+    Precision is: 0.975, 0.048
+    ROC AUC is: 0.519
+    Confusion matrix is:
+[[26704  1231]
+ [  685    62]]
+    tn:26704, fp:1231, fn:685, tp:62
+    Time: 0.226s
