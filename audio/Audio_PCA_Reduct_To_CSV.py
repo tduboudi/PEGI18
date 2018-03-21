@@ -12,6 +12,10 @@ warnings.filterwarnings('ignore')
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
+NUM_COMPONENT_PCA = 10
+DevSetAudioFeaturesDirectory = "./DevSetComplete/complete/"
+TestSetAudioFeaturesDirectory = "./TestSetComplete/complete/"
+
 def loadFiles(directory):
 	current = 0
 	names = []
@@ -58,8 +62,8 @@ def ScaleAndApplyPCA(X, pca):
 	X_pca = pca.transform(XReduit) # On transforme par l'ACP
 	return X_pca
 
-DevFeatures, DevLabels, DevNamedIndices = loadFiles("./DevSetComplete/complete/")
-TestFeatures, TestLabels, TestNamedIndices  = loadFiles("./TestSetComplete/complete/")
+DevFeatures, DevLabels, DevNamedIndices = loadFiles(DevSetAudioFeaturesDirectory)
+TestFeatures, TestLabels, TestNamedIndices  = loadFiles(TestSetAudioFeaturesDirectory)
 
 DevFeatures = np.nan_to_num(DevFeatures)
 TestFeatures = np.nan_to_num(TestFeatures)
@@ -69,7 +73,7 @@ TestFeatures = TestFeatures.astype(float)
 DevLabels = DevLabels.astype(float)
 TestLabels = TestLabels.astype(float)
 
-DevFeatures, PCA = PCAAndScaler(DevFeatures,10)
+DevFeatures, PCA = PCAAndScaler(DevFeatures,NUM_COMPONENT_PCA)
 TestFeatures = ScaleAndApplyPCA(TestFeatures,PCA)
 
 np.save("dev_features_pca.csv", DevFeatures)
