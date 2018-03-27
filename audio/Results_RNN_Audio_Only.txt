@@ -1,5 +1,22 @@
+
+********************************************
+
+Learning rate = 0.3
+
 Accuracy is:  0.98164
 Recall is:  0.0
 Precision is:  0.0
 ROC AUC is:  0.0
 tn, fp, fn, tp are:  24541.0 0.0 459.0 0.0
+
+********************************************
+
+Learning rate = 0.001
+
+Accuracy is:  0.88783216
+Recall is:  0.10422535
+Precision is:  0.027966741
+ROC AUC is:  0.0
+tn, fp, fn, tp are:  25318.0 2572.0 636.0 74.0
+
+********************************************

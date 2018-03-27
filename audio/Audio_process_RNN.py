@@ -12,7 +12,7 @@ warnings.filterwarnings('ignore')
 import tensorflow as tf
 
 num_epochs = 1
-total_series_length = 25000
+total_series_length = 26000
 truncated_backprop_length = 10
 state_size = 4
 num_classes = 2
@@ -70,7 +70,7 @@ predictions_series = [tf.nn.softmax(logits) for logits in logits_series]
 losses = [tf.nn.sparse_softmax_cross_entropy_with_logits(logits = logits, labels = labels) for logits, labels in zip(logits_series,labels_series)]
 total_loss = tf.reduce_mean(losses)
 
-train_step = tf.train.AdagradOptimizer(0.3).minimize(total_loss)
+train_step = tf.train.AdagradOptimizer(0.001).minimize(total_loss)
 
 with tf.Session() as sess:
 	sess.run(tf.initialize_all_variables())
