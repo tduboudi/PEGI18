@@ -11,8 +11,8 @@ import warnings
 warnings.filterwarnings('ignore')
 import tensorflow as tf
 
-num_epochs = 10
-total_series_length = 1000
+num_epochs = 1
+total_series_length = 25000
 truncated_backprop_length = 10
 state_size = 4
 num_classes = 2
@@ -89,8 +89,8 @@ with tf.Session() as sess:
 			batchX = x[:,start_idx:end_idx]
 			batchY = y[:,start_idx:end_idx]
 
-			_total_loss, _current_state, _predictions_series = sess.run(
-				[total_loss, current_state, predictions_series],
+			_total_loss, _train_step, _current_state, _predictions_series = sess.run(
+				[total_loss, train_step, current_state, predictions_series],
 				feed_dict={
 					batchX_placeholder:batchX,
 					batchY_placeholder:batchY,
@@ -106,13 +106,15 @@ with tf.Session() as sess:
 	print("Evaluating the model\n")
 	
 	loss_list = []
-
+	predict_values_tensor = []
+	batchY_tensor = []
+	
 	for epoch_idx in range(num_epochs):
 		x,y = generateTestingData()
 		_current_state = np.zeros((batch_size, state_size))
 
 		print("New data, epoch", epoch_idx)
-
+		
 		for batch_idx in range(num_batches):
 			start_idx = batch_idx * truncated_backprop_length
 			end_idx = start_idx + truncated_backprop_length
@@ -120,19 +122,39 @@ with tf.Session() as sess:
 			batchX = x[:,start_idx:end_idx]
 			batchY = y[:,start_idx:end_idx]
 
-			_total_loss, _train_step, _current_state, _predictions_series = sess.run(
-				[total_loss, train_step, current_state, predictions_series],
+			_current_state, _predictions_series = sess.run(
+				[current_state, predictions_series],
 				feed_dict={
 					batchX_placeholder:batchX,
 					batchY_placeholder:batchY,
 					init_state:_current_state
 				})
-
+			
 			loss_list.append(_total_loss)
-			
-			print(predictions_series)
-			
-			if batch_idx%100 == 0:
-				print("Step",batch_idx, "Loss", _total_loss)
-	
 
+			predict_tensor = tf.concat(_predictions_series[:], 0)
+			predict_values_tensor.append(tf.argmax(predict_tensor,1))
+			batchY_tensor.append(tf.cast(tf.convert_to_tensor(batchY), tf.int64))
+	
+	predictions_tensor = tf.concat(predict_values_tensor[:], 0)
+	labels_tensor = tf.reshape(tf.concat(batchY_tensor[:], 1), [-1,]) 
+	
+	accuracy = tf.metrics.accuracy(labels_tensor, predictions_tensor)
+	recall = tf.metrics.recall(labels_tensor, predictions_tensor)
+	precision = tf.metrics.precision(labels_tensor, predictions_tensor)
+	auc = tf.metrics.auc(labels_tensor, predictions_tensor)
+	fp = tf.metrics.false_positives(labels_tensor, predictions_tensor)
+	tp = tf.metrics.true_positives(labels_tensor, predictions_tensor)
+	fn = tf.metrics.false_negatives(labels_tensor, predictions_tensor)
+	tn = tf.metrics.true_negatives(labels_tensor, predictions_tensor)
+	
+	sess.run(tf.initialize_local_variables())
+	sess.run(tf.initialize_all_variables())
+	
+	_accuracy,_recall,_precision,_auc,_fp,_tp,_fn,_tn = sess.run([accuracy,recall,precision,auc,fp,tp,fn,tn])
+	
+	print("Accuracy is: ",_accuracy[0])
+	print("Recall is: ",_recall[0])
+	print("Precision is: ",_precision[0])
+	print("ROC AUC is: ",_auc[0])
+	print("tn, fp, fn, tp are: ",_tn[0], _fp[0], _fn[0], _tp[0])
