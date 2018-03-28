@@ -1,0 +1,4 @@
+3d_convolution/data/checkpoints/*
+lstm/data/checkpoints/*
+
+data/*
